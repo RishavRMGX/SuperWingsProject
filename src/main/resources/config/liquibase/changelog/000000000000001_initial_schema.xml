@@ -16,9 +16,15 @@
             <column name="atomic_number" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="chemical_symbol" type="varchar(2)"/>
-            <column name="chemical_name" type="varchar(60)"/>
-            <column name="atomic_weight" type="DECIMAL(8,4)"/>
+            <column name="chemical_symbol" type="varchar(2)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="CHEMICAL_SYMBOL"/>
+            </column>
+            <column name="chemical_name" type="varchar(60)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="CHEMICAL_NAME"/>
+            </column>
+            <column name="atomic_weight" type="DECIMAL(8,4)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="ATOMIC_WEIGHT"/>
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>

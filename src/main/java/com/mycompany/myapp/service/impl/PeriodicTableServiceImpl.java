@@ -5,7 +5,11 @@ import com.mycompany.myapp.repository.PeriodicTableRepository;
 import com.mycompany.myapp.service.PeriodicTableService;
 import com.mycompany.myapp.service.dto.PeriodicTableDTO;
 import com.mycompany.myapp.service.mapper.PeriodicTableMapper;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import liquibase.exception.DatabaseException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,6 +45,15 @@ public class PeriodicTableServiceImpl implements PeriodicTableService {
     public PeriodicTableDTO addElement(PeriodicTableDTO periodicTableDTO) {
         DecimalFormat df = new DecimalFormat("###.####");
         periodicTableDTO.setAtomicWeight(Double.valueOf(df.format(periodicTableDTO.getAtomicWeight())));
-        return periodicTableMapper.toDTO(periodicTableRepository.save(periodicTableMapper.toEntity(periodicTableDTO)));
+        PeriodicTableDTO periodicTableDTO1 = new PeriodicTableDTO();
+        try {
+            return periodicTableMapper.toDTO(periodicTableRepository
+                .save(periodicTableMapper.toEntity(periodicTableDTO)));
+        }catch (DataIntegrityViolationException d){
+            throw new BadRequestAlertException("Entered Data Already Exists !","PeriodicTable","INVALID_DATA");
+        }
+        catch(Exception e){
+            throw new BadRequestAlertException("Invalid Data","PeriodicTable","INVALID_DATA");
+        }
     }
 }
